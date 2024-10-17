@@ -19,7 +19,7 @@ program do masowego tworzenia kont i otwierania boxów. (spk?)
 - Python 3.x
 
 ## Instalacja
-1.
+
 ```bash
 git clone https://github.com/antipaster/x-kom-unboxer.git
 cd x-kom-unboxer
