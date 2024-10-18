@@ -317,7 +317,7 @@ while True:
                     "Host": "mobileapi.x-kom.pl",
                     "Time-Zone": "UTC",
                     "User-Agent": "xkom_prod/1.108.0",
-                    "x-api-key": api_key
+                    "x-api-key": "bekorcfmGwGMw9Nh" # other api key because of the box 3 that needs device to be android or ios.
                 }
 
                 response = requests.post(roll_url, headers=headers, proxies=proxy)
