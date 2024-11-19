@@ -61,7 +61,7 @@ def get_api_key():
         }
 
 
-        response = requests.get("https://assets.x-kom.pl/public-spa/xkom/066bb05bf7f3c43b.esm.min.js", headers=cwel_headers)
+        response = requests.get("https://assets.x-kom.pl/public-spa/xkom/83fbd252e70783d9.esm.min.js", headers=cwel_headers)
         
         if response.status_code == 200:
             with open(JS_FILE, 'w', encoding='utf-8') as js_file:
