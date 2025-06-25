@@ -26,7 +26,7 @@ program do masowego tworzenia kont i otwierania boxów.
 ## Instalacja
 
 ```bash
-git clone https://github.com/antipaster/x-kom-unboxer.git
+git clone https://github.com/antipaster/xkom-unboxer.git
 cd x-kom-unboxer
 pip install -r requirements.txt
 ```
