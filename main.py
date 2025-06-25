@@ -226,7 +226,7 @@ def get_activation_link(email, password):
     elif mail_provider == '1secmail':
         # 1secmail does not require password, just poll for messages
         login, domain = email.split('@')
-        for _ in range(20):  # Try for up to ~40 seconds
+        for _ in range(20):  #~40 seconds
             time.sleep(2)
             msg_list_url = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
             resp = requests.get(msg_list_url)
@@ -281,7 +281,7 @@ def roll_box(box_id, access_token, method='put'):
     try:
         data = response.json()
         debug_print(f"[DEBUG] roll_box: Response JSON: {data}")
-        return data  # Return the full JSON response
+        return data  
     except Exception as e:
         debug_print(f"[DEBUG] roll_box: Exception while parsing JSON: {e}")
         return None
@@ -442,17 +442,64 @@ def worker():
                         "X-Requested-With": "pl.xkom"
                     }
                     stop_response = scraper.post(stop_url, headers=stop_headers,proxies=proxy)
+ 
                     try:
                         stop_data = stop_response.json()
                         item = stop_data.get("Item", {})
+                        item_id = item.get("Id", "N/A")
                         item_name = item.get("Name", "N/A")
+                        catalog_price = item.get("CatalogPrice", "N/A")
+                        photo = item.get("Photo", {})
+                        image_url = photo.get("Url", "")
+                        thumb_url = photo.get("ThumbnailUrl", "")
+                        category = item.get("Category", {})
+                        category_name = category.get("NameSingular", "N/A")
+                        producer = item.get("ProducerName", "N/A")
+                        box_price = stop_data.get("BoxPrice", "N/A")
+                        box_rarity = stop_data.get("BoxRarity", {}).get("Name", "N/A")
+                        web_url = stop_data.get("WebUrl", "")
+                        expire_date = stop_data.get("ExpireDate", "N/A")
+                        promo_gain = stop_data.get("PromotionGain", {})
+                        promo_gain_value = promo_gain.get("Value", "N/A")
+                        promo_gain_type = promo_gain.get("GainType", "N/A")
+                        comments = stop_data.get("ProductCommentsStatistics", {})
+                        total_comments = comments.get("TotalCount", "N/A")
+                        avg_rating = comments.get("AverageRating", "N/A")
+                        expiration_msg = stop_data.get("ExpirationTimeMessage", "")
                         with item_count_lock:
                             item_count += 1
                             rolled_item_names.append(item_name)
                             update_event.set()
+            
+                        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                        captured_info = f"{timestamp}:{item_name}:{catalog_price}:{box_price}:{box_rarity}:{category_name}:{producer}:{promo_gain_value}:{promo_gain_type}:{email}:{password}\n"
+                        with open("capture_info.txt", "a", encoding="utf-8") as file:
+                            file.write(captured_info)
                         if webhook_url:
+                            embed = {
+                                "title": f"🎁 New Item Rolled!",
+                                "description": (
+                                    f"**Item:** {item_name}\n"
+                                    f"**Producer:** {producer}\n"
+                                    f"**Category:** {category_name}\n"
+                                    f"**Box:** {box_id}\n"
+                                    f"**Rarity:** {box_rarity}\n"
+                                    f"**Catalog Price:** {catalog_price} zł\n"
+                                    f"**Box Price:** {box_price} zł\n"
+                                    f"**Promo Gain:** {promo_gain_value} {promo_gain_type}\n"
+                                    f"**Expires:** {expire_date}\n"
+                                    f"**Account:** `{email}`\n"
+                                    f"**Password:** `{password}`\n"
+                                    f"[View on x-kom]({'https://www.x-kom.pl/' + web_url if web_url else ''})"
+                                ),
+                                "color": 0x00ff00,
+                                "footer": {"text": f"Rolled by Xkom Unboxer | {expiration_msg}"},
+                                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
+                            }
+                            if image_url:
+                                embed["thumbnail"] = {"url": image_url}
                             discord_data = {
-                                "content": f"Item Name: {item_name}"
+                                "embeds": [embed]
                             }
                             try:
                                 requests.post(webhook_url, json=discord_data)
@@ -488,7 +535,9 @@ def print_screen():
     faded_sep = fade.brazil(("-" * len(count_str)).center(term_width))
     print(faded_count)
     print(faded_sep)
+
     item_lines = "\n".join(f"{idx}. {name}".center(term_width) for idx, name in enumerate(rolled_item_names[-15:], 1))
+
     if item_lines:
         print(fade.brazil(item_lines))
     print(faded_sep)
