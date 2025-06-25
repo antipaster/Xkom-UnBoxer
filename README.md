@@ -1,7 +1,11 @@
 # Xkom UnBoxer
-program do masowego tworzenia kont i otwierania boxów. (spk?)
+program do masowego tworzenia kont i otwierania boxów.
 
-![ss](./resources/screenshot.png)
+## Updated 25.06.2025 
+- Updated the unboxer for the new X-kom api's 
+- Also reworked the ui
+
+![ss](./resources/screenshot.jpg)
 
 
 
@@ -17,6 +21,7 @@ program do masowego tworzenia kont i otwierania boxów. (spk?)
 ## Wymagania
 
 - Python 3.x
+- Polskie proxy (najlepiej residential)
 
 ## Instalacja
 
@@ -25,4 +30,4 @@ git clone https://github.com/antipaster/x-kom-unboxer.git
 cd x-kom-unboxer
 pip install -r requirements.txt
 ```
-2. Dodaj proxy do proxy.txt zgodnie z formatem.
+2. Dodaj proxy do proxy.txt zgodnie z formatem. 
