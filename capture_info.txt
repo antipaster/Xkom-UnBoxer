@@ -1,0 +1,1 @@
+format: {timestamp}:{item_name}:{catalog_price}:{box_price}:{box_rarity}:{category_name}:{producer}:{promo_gain_value}:{promo_gain_type}:{email}:{password}
