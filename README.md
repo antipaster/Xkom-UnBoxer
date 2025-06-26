@@ -31,3 +31,5 @@ cd x-kom-unboxer
 pip install -r requirements.txt
 ```
 2. Dodaj proxy do proxy.txt zgodnie z formatem. 
+
+[![Hits](https://hits.sh/github.com/antipaster/Xkom-UnBoxer.svg)](https://hits.sh/github.com/antipaster/Xkom-UnBoxer/)
